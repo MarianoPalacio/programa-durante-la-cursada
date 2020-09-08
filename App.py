@@ -92,9 +92,13 @@ class Administradora(object):
 		#Metodos, Alta, Mostrar datos en Base de datos y Crear basa
 		def CrearDB():
 			hora()
-			MDB.crearbase()
-			MDB.conectar()
-			MDB.tabla()
+			try:
+				MDB.crearbase()
+				MDB.conectar()
+				MDB.tabla()
+			except:
+				messagebox.showinfo(message='La base ya existe', title='Mensaje')
+
 
 		def mostrar(self):
 			records = self.tree.get_children()
@@ -114,18 +118,23 @@ class Administradora(object):
 			
 		def dardealta():
 			hora()
-			MDB.create_connection()
-			Base = sqlite3.connect('DBModuloUnidad4.db')
-			Base = MDB.conectar()
-			ctabla = Base.cursor()
-			cb = "INSERT INTO producto VALUES (NULL, ?, ?)"
-			datos = (self.Vale1.get(), self.Vale2.get())
-			ctabla.execute(cb, datos)
-			Base.commit()
-			self.e1.delete(0, END)
-			self.e2.delete(0, END)
-			mostrar(self)
-	
+			if MV.validarcampo(self):	
+				messagebox.showinfo(message='Error en ingreso de datos, verificar', title='ALERTA')
+				self.e1.delete(0, END)
+			else:
+				messagebox.showinfo(message='Validación exitosa', title='Validación')
+				MDB.create_connection()
+				Base = sqlite3.connect('DBModuloUnidad4.db')
+				Base = MDB.conectar()
+				ctabla = Base.cursor()
+				cb = "INSERT INTO producto VALUES (NULL, ?, ?)"
+				datos = (self.Vale1.get(), self.Vale2.get())
+				ctabla.execute(cb, datos)
+				Base.commit()
+				self.e1.delete(0, END)
+				self.e2.delete(0, END)
+				mostrar(self)
+
 		def Borrar():
 			id = self.tree.focus()
 			a = self.tree.item(id)
@@ -138,7 +147,7 @@ class Administradora(object):
 			sql = "DELETE from producto where Id =" + str(item)
 			cur.execute(sql)
 			conn.commit()
-			messagebox.showinfo(message='''Registro eliminado con éxito''', title="Información")
+			messagebox.showinfo(message='Registro eliminado con éxito', title='Información')
 			mostrar(self)
 
 

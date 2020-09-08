@@ -1,4 +1,4 @@
-#Nivel 2 - Unidad 4 - POO
+#Nivel 2 - Trbajo Práctico Final - POO
 #Módulo Base de Datos
 import sqlite3
 
